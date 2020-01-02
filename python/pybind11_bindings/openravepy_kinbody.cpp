@@ -3815,6 +3815,8 @@ void init_openravepy_kinbody()
 #else
         scope_ kinbody = class_<PyKinBody, OPENRAVE_SHARED_PTR<PyKinBody>, bases<PyInterfaceBase> >("KinBody", DOXY_CLASS(KinBody), no_init)
 #endif
+                        .def_readwrite("radius", &PyKinBody::radius)
+                        .def_readwrite("disks", &PyKinBody::disks)
                         .def("Destroy",&PyKinBody::Destroy, DOXY_FN(KinBody,Destroy))
 #ifdef USE_PYBIND11_PYTHON_BINDINGS
                         .def("InitFromBoxes", &PyKinBody::InitFromBoxes,

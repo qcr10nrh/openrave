@@ -21,9 +21,9 @@ objects the generator relies on are used to produce a unique ID to index the dat
 $OPENRAVE_DATABASE. For example, the grasping database will combine the robot manipulator hash and
 the target object hash.
 """
- # for python 2.5
-
-import pickle
+#import cPickle as pickle # for python 2.5
+import pickle # python 3.8
+import io
 from .. import openravepy_int
 from ..openravepy_ext import openrave_exception_helper as openrave_exception
 from .. import metaclass
@@ -105,7 +105,7 @@ class DatabaseGenerator(metaclass.AutoReloader):
             makedirs(os.path.split(filename)[0])            
         except OSError:
             pass
-        with open(filename, 'w') as f:
+        with io.open(filename, 'wb') as f:
             pickle.dump((self.getversion(),params), f)
     def generate(self):
         raise NotImplementedError()
