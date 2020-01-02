@@ -618,13 +618,25 @@ toPyArray(const std::vector<T>& v, std::vector<npy_intp>& dims)
 }
 
 template <typename T, int N>
-inline 
+inline
 #ifdef USE_PYBIND11_PYTHON_BINDINGS
 py::array_t<T>
 #else
 py::numeric::array
 #endif
 toPyArray(const boost::array<T, N>& v)
+{
+    return toPyArrayN(v.data(), N);
+}
+
+template <typename T, int N>
+inline
+#ifdef USE_PYBIND11_PYTHON_BINDINGS
+py::array_t<T>
+#else
+py::numeric::array
+#endif
+toPyArray(const std::array<T, N>& v)
 {
     return toPyArrayN(v.data(), N);
 }
