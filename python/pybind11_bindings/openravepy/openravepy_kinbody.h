@@ -87,8 +87,6 @@ public:
 class PyKinBody : public PyInterfaceBase
 {
  public:
-    double radius = 0.0;
-    py::list disks;
     class PyGrabbedInfo
 {
 public:
