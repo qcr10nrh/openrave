@@ -280,6 +280,14 @@ size_t pyExtendActiveDOFWaypoint(int index, object odofvalues, object odofveloci
     return OpenRAVE::planningutils::ExtendActiveDOFWaypoint(index, ExtractArray<dReal>(odofvalues), ExtractArray<dReal>(odofvelocities), openravepy::GetTrajectory(pytraj), openravepy::GetRobot(pyrobot), fmaxvelmult, fmaxaccelmult, plannername);
 }
 
+// pybind11 cannot downcast PyInterfaceBasePtr to PyTrajectoryBasePtr
+size_t pyExtendActiveDOFWaypoint2(int index, object odofvalues, object odofvelocities, PyInterfaceBasePtr pyint, PyRobotBasePtr pyrobot, dReal fmaxvelmult=1, dReal fmaxaccelmult=1, const std::string& plannername="")
+{
+    PyTrajectoryBasePtr pytraj = OPENRAVE_DYNAMIC_POINTER_CAST<PyTrajectoryBase>(pyint);
+    BOOST_ASSERT(pytraj != nullptr);
+    return pyExtendActiveDOFWaypoint(index, odofvalues, odofvelocities, pytraj, pyrobot, fmaxvelmult, fmaxaccelmult, plannername);
+}
+
 size_t pyInsertActiveDOFWaypointWithRetiming(int index, object odofvalues, object odofvelocities, PyTrajectoryBasePtr pytraj, PyRobotBasePtr pyrobot, dReal fmaxvelmult=1, dReal fmaxaccelmult=1, const std::string& plannername="", const std::string& plannerparameters="")
 {
     return OpenRAVE::planningutils::InsertActiveDOFWaypointWithRetiming(index, ExtractArray<dReal>(odofvalues), ExtractArray<dReal>(odofvelocities), openravepy::GetTrajectory(pytraj), openravepy::GetRobot(pyrobot), fmaxvelmult, fmaxaccelmult, plannername, plannerparameters);
@@ -620,6 +628,17 @@ void InitPlanningUtils()
                   .staticmethod("ExtendWaypoint")
 #endif
 #ifdef USE_PYBIND11_PYTHON_BINDINGS
+                  .def_static("ExtendActiveDOFWaypoint", planningutils::pyExtendActiveDOFWaypoint2,
+                    "index"_a,
+                    "dofvalues"_a,
+                    "dofvelocities"_a,
+                    "interface"_a, // this is trajectory
+                    "robot"_a,
+                    "maxvelmult"_a = 1.0,
+                    "maxaccelmult"_a = "",
+                    "plannername"_a = "",
+                    DOXY_FN1(ExtendActiveDOFWaypoint)
+                    )
                   .def_static("ExtendActiveDOFWaypoint", planningutils::pyExtendActiveDOFWaypoint,
                     "index"_a,
                     "dofvalues"_a,
